@@ -1,10 +1,10 @@
 import cv2
 import torch
 import numpy as np
-import util
-from processing_image import warp_image
-from hourglass_network import lane_network
-from parameters import Parameters
+from src import util
+from src.processing_image import warp_image
+from src.hourglass_network import lane_detection_network
+from src.parameters import Parameters
 from copy import deepcopy
 from torch.autograd import Variable
 
@@ -13,23 +13,23 @@ from torch.autograd import Variable
 p = Parameters()
 
 class Net(object):
-    
     def __init__(self):
         self.colours = np.array([[78, 142, 255], [204, 237, 221], [92, 252, 255], [92, 255, 195], [159, 150, 255]])
-        # print(self.colours.shape)
-        self.model = lane_network()
+        self.model = lane_detection_network()
         if torch.cuda.is_available():
             self.model.cuda()
 
     def load_model(self, epoch, loss_value):
-        self.model.load_state_dict(torch.load(p.model_path+str(epoch)+'_'+str(loss_value)+'_'+'lane_detection_network.pkl', map_location='cuda:0'),False)
+        self.model.load_state_dict(torch.load(p.model_path+str(epoch)+'_tensor('+str(loss_value)+')_'+'lane_detection_network.pkl', map_location='cuda:0'),False)
     
-    def predict(self, image):
+    def predict(self, image, warp = True):
         self.image = image
-        self.warped = warp_image(image)
-        
+        if warp:
+            self.warped = warp_image(image)
+        else:
+            self.warped = image
         # self.original = cv2.resize(warped, (p.x_size, p.y_size))
-
+        
         image = np.rollaxis(self.warped, axis=2, start=0)/255.0
         image = np.array([image])
 
@@ -59,7 +59,6 @@ class Net(object):
         x, y = generate_result(confidence, offset, instance, p.threshold_point)
         # print("-----------------------------------------")
         self.x, self.y = eliminate_fewer_points(x, y)
-        
         
         return self.x, self.y
 
@@ -145,3 +144,11 @@ def eliminate_fewer_points(x, y):
             out_x.append(i)
             out_y.append(j)     
     return out_x, out_y  
+
+if __name__ == "__main__":
+    net = Net()
+    net.load_model(34,0.7828)
+    image = cv2.imread("images_test/2lines-00000522.jpg")
+    image = cv2.resize(image,(512,256))
+    x, y = net.predict(image, warp=False)
+    print(x, y)
