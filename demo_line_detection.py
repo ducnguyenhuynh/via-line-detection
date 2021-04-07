@@ -20,4 +20,5 @@ if __name__ == "__main__":
     print(x, y)
     image_points_result = net.get_image_points()
     cv2.imshow("points", image_points_result)
+    cv2.imwrite("result.png",image_points_result)
     cv2.waitKey()
