@@ -4,3 +4,5 @@ src/__pycache__/
 dataset/
 
 video/*.avi
+
+demo_line_detection_*.py

@@ -24,13 +24,15 @@ repo này huấn luyện mạng phân đoạn vạch kẻ đường, được t�
 
 - [ ] Xây dựng metrics đánh giá.
 
-- [ ] Demo kết quả.
+- [x] Demo kết quả.
     - [x] Demo kết quả trên ảnh
-    - [ ] Demo kết quả trên video
+    - [x] Demo kết quả trên video
 
 ## Kết quả
 
 ![demo1](images_test/result.png "demo")
+![demo_video](images/result_demo.gif "demo_video")
+
 
 ## Cài đặt môi trường
 
@@ -95,7 +97,8 @@ B6: Chạy Demo.
 
 Dữ liệu gốc nhóm via cung cấp có độ phân giải 640x250, sẽ được resize về kích thước 512x256. dữ liệu sẽ được đưa qua một hàm homography để có được birdview.
 
-Ảnh đầu ra sau khi tiền xử lý: 
+Ảnh đầu ra sau khi tiền xử lý:
+
 ![warp_image](images_test/wraped_image.png "warp_image")
 
 Tập dữ liệu "dataset-line-detection" đã chứa các hình ảnh được warp sẵn, nếu sử dụng hình trong tập dữ liệu trên có thể bỏ qua bước này.
@@ -114,4 +117,3 @@ Tham khảo [1].
 [1]. Lane Detection: [Key Points Estimation and Point Instance Segmentation Approach for Lane Detection](https://arxiv.org/abs/2002.06604)
 
 [2]. [PINet](https://github.com/koyeongmin/PINet)
-

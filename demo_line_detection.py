@@ -42,23 +42,23 @@ if __name__ == "__main__":
         cap = cv2.VideoCapture(args['direction'])
         if args['save_video']:
             fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            out = cv2.VideoWriter('result.avi', fourcc, 30, (512,256))
+            out = cv2.VideoWriter('result-point.avi', fourcc, 30, (512,256))
         while cap.isOpened():
             prevTime = time.time()
             ret, image = cap.read()
             t_image = cv2.resize(image,(512,256))
             x , y = net.predict(t_image)
-            fits = np.array([np.polyfit(_y, _x, 1) for _x, _y in zip(x, y)])
-            fits = util.adjust_fits(fits)
-            mask = net.get_mask_lane(fits)
+            # fits = np.array([np.polyfit(_y, _x, 1) for _x, _y in zip(x, y)])
+            # fits = util.adjust_fits(fits)
+            image_points = net.get_image_points()
+            # mask = net.get_mask_lane(fits)
             cur_time = time.time()
             fps = 1/(cur_time - prevTime)
             s = "FPS : "+ str(fps)
-            image_lane = net.get_image_lane()
-            
-            cv2.putText(image_lane, s, (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
-            cv2.imshow("image",image_lane)
-            out.write(image_lane)
+            # image_lane = net.get_image_lane()
+            cv2.putText(image_points, s, (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
+            cv2.imshow("image",image_points)
+            out.write(image_points)
             
             key = cv2.waitKey(1)
             if not ret or key == ord('q'):
