@@ -75,7 +75,7 @@ def Training():
                 lane_agent.save_model(int(step/1000), loss_p)
                 testing(lane_agent, test_image, step, loss_p)
             step += 1
-
+        
         sampling_list = copy.deepcopy(lane_agent.get_data_list())
         lane_agent.sample_reset()
 

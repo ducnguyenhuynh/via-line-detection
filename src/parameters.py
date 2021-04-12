@@ -12,7 +12,7 @@ class Parameters():
     weight_decay=1e-5
     save_path = "savefile/"
     # train from scratch.
-    model_path = "savefile/"
+    model_path = "src/savefile/"
     batch_size = 16
     x_size = 512
     y_size = 256
@@ -22,7 +22,7 @@ class Parameters():
     feature_size = 4
     regression_size = 110
     mode = 2
-    threshold_point = 0.93 #0.35 #0.5 #0.57 #0.64 #0.35
+    threshold_point = 0.75 #0.35 #0.5 #0.57 #0.64 #0.35
     threshold_instance = 0.1
 
     #loss function parameter
@@ -55,8 +55,8 @@ class Parameters():
     train_root_url="../dataset/train/"
     train_labels_root="../dataset/train/"
 
-    test_root_url="../dataset/test/"
-    test_labels_root="../dataset/test/"
+    test_root_url="../dataset/train/"
+    test_labels_root="../dataset/train/"
     
     # test parameter
     color = [(0,0,0), (255,0,0), (0,255,0),(0,0,255),(255,255,0),(255,0,255),(0,255,255),(255,255,255),(100,255,0),(100,0,255),(255,100,0),(0,100,255),(255,0,100),(0,255,100)]
