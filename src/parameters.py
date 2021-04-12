@@ -10,9 +10,9 @@ class Parameters():
     n_epoch = 100
     l_rate = 0.0001
     weight_decay=1e-5
-    save_path = "src/savefile/"
+    save_path = "savefile/"
     # train from scratch.
-    model_path = "src/savefile/"
+    model_path = "savefile/"
     batch_size = 16
     x_size = 512
     y_size = 256
@@ -52,11 +52,11 @@ class Parameters():
                     ,(18,52),(19,53),(20,54),(21,55),(22,56),(23,57),(24,58),(25,59),(26,60),(27,61),(28,62),(29,63),(30,64),(31,65)
                     ,(32,66),(33,67),(68,68),(69,69),(70,72),(71,73)]
     
-    train_root_url="train/"
-    train_labels_root="train/"
+    train_root_url="../dataset/train/"
+    train_labels_root="../dataset/train/"
 
-    test_root_url="train/"
-    test_labels_root="train/"
+    test_root_url="../dataset/test/"
+    test_labels_root="../dataset/test/"
     
     # test parameter
     color = [(0,0,0), (255,0,0), (0,255,0),(0,0,255),(255,255,0),(255,0,255),(0,255,255),(255,255,255),(100,255,0),(100,0,255),(255,100,0),(0,100,255),(255,0,100),(0,255,100)]
