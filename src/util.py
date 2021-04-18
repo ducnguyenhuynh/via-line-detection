@@ -6,8 +6,8 @@ import numpy as np
 from torch.autograd import Variable
 from torch.autograd import Function as F
 from numpy.polynomial import Polynomial as P
-# from parameters import Parameters
-from src.parameters import Parameters
+from parameters import Parameters
+# from src.parameters import Parameters
 import math
 
 p = Parameters()

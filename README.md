@@ -1,6 +1,6 @@
 # via-line-detection
 
-repo này huấn luyện mạng phân đoạn vạch kẻ đường, được tích hợp trong dự án [via]().
+repo này huấn luyện mạng phát hiện vạch kẻ đường, được tích hợp trong dự án [via]().
 
 ## Công việc đã thực hiện
 
