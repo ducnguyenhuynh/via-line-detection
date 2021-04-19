@@ -288,7 +288,7 @@ class Agent(nn.Module):
         print("offset loss: ", offset_loss.data)
 
         print("attention loss")
-        print("attention loss: ", attention_loss.data)
+        print("attention loss: ", attention_loss)
 
         print("--------------------------------------------------------------------")
         print("total loss: ", lane_detection_loss.data)
