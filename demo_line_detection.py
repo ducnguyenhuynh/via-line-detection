@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-o','--option', type=str, default='image', help="demo line detection on 'image' or 'video', default 'image' ", required=True)
-    parser.add_argument('-d','--direction', type=str, default="", help='direction of demo video')
+    parser.add_argument('-d','--direction', type=str, default="", help='direction of demo video', required=True)
     parser.add_argument('-s','--save_video', type=bool, default=False)
     args = vars(parser.parse_args())
     
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # read image from folder images test
     if args['option'] == 'image':
 
-        image = cv2.imread("images_test/2lines-00001086.jpg")
+        image = cv2.imread(args['direction'])
 
         image_resized = cv2.resize(image,(512,256))
         cv2.imshow("image",image_resized)

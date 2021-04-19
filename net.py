@@ -20,7 +20,7 @@ class Net(object):
             self.model.cuda()
 
     def load_model(self, epoch, loss_value):
-        self.model.load_state_dict(torch.load(p.model_path+str(epoch)+'_tensor('+str(loss_value)+')_'+'lane_detection_network.pkl', map_location='cuda:0'),False)
+        self.model.load_state_dict(torch.load("src/"+p.model_path+str(epoch)+'_tensor('+str(loss_value)+')_'+'lane_detection_network.pkl', map_location='cuda:0'),False)
     
     def predict(self, image, warp = True):
         self.image = image

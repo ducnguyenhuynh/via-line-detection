@@ -29,8 +29,9 @@ repo này huấn luyện mạng phát hiện vạch kẻ đường, được tí
     - [x] Demo kết quả trên video
 
 ## Kết quả
-
+Image
 ![demo1](images_test/result.png "demo")
+Video
 ![demo_video](images/result_demo.gif "demo_video")
 
 
