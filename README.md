@@ -30,8 +30,11 @@ repo này huấn luyện mạng phát hiện vạch kẻ đường, được tí
 
 ## Kết quả
 Image
+
 ![demo1](images_test/result.png "demo")
+
 Video
+
 ![demo_video](images/result_demo.gif "demo_video")
 
 
@@ -68,7 +71,7 @@ via-lines_detection
 ├── src
 |    ├── *.py
 |    ├── savefile
-here                                    # put pre-train models here
+│    |   ├── here                   # put pre-train models here
 │    |   ├── *.pkl
 |
 ├── video                           # put videos your want to test here
