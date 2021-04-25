@@ -96,7 +96,7 @@ class Generator(object):
 
         for i in range(start, end):
             data = self.test_data[i]
-            print(self.p.test_root_url+data[:-1])
+            # print(self.p.test_root_url+data[:-1])
             temp_image = cv2.imread(self.p.test_root_url+data[:-1])
             
             original_size_x = temp_image.shape[1]
@@ -201,7 +201,7 @@ class Generator(object):
             data_list.append(data)
 
             # train set image
-            print(self.p.train_root_url+data[:-1])
+            # print(self.p.train_root_url+data[:-1])
             temp_image = cv2.imread(self.p.train_root_url+data[:-1])
             # if i==start:
                 # print(data[:-1])
@@ -245,7 +245,7 @@ class Generator(object):
 
         #test set image
         test_index = random.randrange(0, self.size_test-1)
-        print(self.p.test_root_url+self.test_data[test_index][:-1])
+        # print(self.p.test_root_url+self.test_data[test_index][:-1])
         test_image = cv2.imread(self.p.test_root_url+self.test_data[test_index][0:-1])
 
         test_image = cv2.resize(test_image, (self.p.x_size,self.p.y_size))

@@ -74,6 +74,11 @@ class LaneEval(object):
             gt = gts[raw_file]
             gt_lanes = gt['lanes']
             y_samples = gt['h_samples']
+            if len(pred_lanes) == 0:
+                continue
+            print(pred_lanes)
+            print(gt_lanes)
+            print(y_samples)
             try:
                 a, p, n = LaneEval.bench(pred_lanes, gt_lanes, y_samples, run_time)
             except BaseException as e:
@@ -82,12 +87,12 @@ class LaneEval(object):
             fp += p
             fn += n
         num = len(gts)
-        # the first return parameter is the default ranking parameter
-        return json.dumps([
-            {'name': 'Accuracy', 'value': accuracy / num, 'order': 'desc'},
-            {'name': 'FP', 'value': fp / num, 'order': 'asc'},
-            {'name': 'FN', 'value': fn / num, 'order': 'asc'}
-        ])
+        # # the first return parameter is the default ranking parameter
+        # return json.dumps([
+        #     {'name': 'Accuracy', 'value': accuracy / num, 'order': 'desc'},
+        #     {'name': 'FP', 'value': fp / num, 'order': 'asc'},
+        #     {'name': 'FN', 'value': fn / num, 'order': 'asc'}
+        # ])
 
 
 if __name__ == '__main__':

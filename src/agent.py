@@ -1,3 +1,5 @@
+%%writefile agent.py
+
 #########################################################################
 ##
 ## train agent that has some utility for training and saving.

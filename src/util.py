@@ -86,6 +86,7 @@ def draw_points(x, y, image):
         if color_index > 12:
             color_index = 12
         for index in range(len(i)):
+            # print( (int(i[index]), int(j[index])))
             image = cv2.circle(image, (int(i[index]), int(j[index])), 5, p.color[color_index], -1)
 
     return image

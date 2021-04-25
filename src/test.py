@@ -44,7 +44,7 @@ def Testing():
     else:
         lane_agent = agent.Agent()
         # lane_agent.load_weights(804, "tensor(0.5786)")
-        lane_agent.load_weights(32, "tensor(1.1001)")
+        lane_agent.load_weights(34, "tensor(0.7828)")
 
         
     ##############################
@@ -67,7 +67,7 @@ def Testing():
             cv2.waitKey(0) 
 
     elif p.mode == 1: # check model with video
-        cap = cv2.VideoCapture("/home/kym/research/autonomous_car_vision/lane_detection/code/Tusimple/git_version/LocalDataset_Day.mp4")
+        cap = cv2.VideoCapture("../video/demo.avi")
         while(cap.isOpened()):
             ret, ori_frame = cap.read()
             torch.cuda.synchronize()
@@ -128,16 +128,24 @@ def Testing():
 ############################################################################
 def evaluation(loader, lane_agent, index= -1, thresh = p.threshold_point, name = None):
     result_data = deepcopy(loader.test_data)
-    progressbar = tqdm(range(loader.size_test//4))
+    ##batch size = 16
+    progressbar = tqdm(range(loader.size_test//16))
     for test_image, target_h, ratio_w, ratio_h, testset_index, gt in loader.Generate_Test():
+        print("target_h:", len(target_h))
+        # print("ratio_w:", ratio_w)
+        # print("testset_index:", testset_index)
+        # print("gt:", gt)
+        
         x, y, _ = test(lane_agent, test_image, thresh, index)
+        print(len(x), len(y))
         x_ = []
         y_ = []
         for i, j in zip(x, y):
             temp_x, temp_y = util.convert_to_original_size(i, j, ratio_w, ratio_h)
             x_.append(temp_x)
             y_.append(temp_y)
-        #x_, y_ = find_target(x_, y_, target_h, ratio_w, ratio_h)
+
+        # x_, y_ = find_target(x_, y_, target_h, ratio_w, ratio_h)
         x_, y_ = fitting(x_, y_, target_h, ratio_w, ratio_h)
         result_data = write_result_json(result_data, x_, y_, testset_index)
 
@@ -210,11 +218,18 @@ def fitting(x, y, target_h, ratio_w, ratio_h):
     count = 0
     x_size = p.x_size/ratio_w
     y_size = p.y_size/ratio_h
-
+    print(target_h[0][0])
+    
     for x_batch, y_batch in zip(x,y):
         predict_x_batch = []
         predict_y_batch = []
+        print(len(x_batch), len(y_batch))
+        count_x = 0
+        print(len(target_h[count]))
+        if len(x_batch) != len(target_h[count]):
+            continue
         for i, j in zip(x_batch, y_batch):
+            
             min_y = min(j)
             max_y = max(j)
             temp_x = []
@@ -235,8 +250,9 @@ def fitting(x, y, target_h, ratio_w, ratio_h):
             last_second = 0
             last_y = 0
             last_second_y = 0
-            for h in target_h[count]:
+            for h in target_h[count][count_x]:
                 temp_y.append(h)
+                
                 if h < min_y:
                     temp_x.append(-2)
                 elif min_y <= h and h <= max_y:
@@ -264,6 +280,7 @@ def fitting(x, y, target_h, ratio_w, ratio_h):
                             temp_x.append(l)
             predict_x_batch.append(temp_x)
             predict_y_batch.append(temp_y)
+            count_x +=1
         out_x.append(predict_x_batch)
         out_y.append(predict_y_batch) 
         count += 1
