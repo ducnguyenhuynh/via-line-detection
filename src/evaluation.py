@@ -10,6 +10,9 @@ class LaneEval(object):
 
     @staticmethod
     def get_angle(xs, y_samples):
+        if len(xs) != len(y_samples):
+            temp = np.array([-2]*4)
+            xs = np.concatenate((xs,temp))
         xs, ys = xs[xs >= 0], y_samples[xs >= 0]
         if len(xs) > 1:
             LaneEval.lr.fit(ys[:, None], xs)
@@ -23,13 +26,21 @@ class LaneEval(object):
     def line_accuracy(pred, gt, thresh):
         pred = np.array([p if p >= 0 else -100 for p in pred])
         gt = np.array([g if g >= 0 else -100 for g in gt])
+        if len(gt) != len(pred):
+            temp = np.array([-2]*4)
+            gt = np.concatenate((gt,temp))
         return np.sum(np.where(np.abs(pred - gt) < thresh, 1., 0.)) / len(gt)
 
     @staticmethod
     def bench(pred, gt, y_samples, running_time):
+        for i in range(len(pred)):
+            if len(pred[i]) != len(y_samples):
+                pred[i] += [-2] * 4
+            
+        
         if any(len(p) != len(y_samples) for p in pred):
             raise Exception('Format of lanes error.')
-        if running_time > 200 or len(gt) + 2 < len(pred):
+        if running_time > 200 or len(gt) + 4 < len(pred):
             return 0., 0., 1.
         angles = [LaneEval.get_angle(np.array(x_gts), np.array(y_samples)) for x_gts in gt]
         threshs = [LaneEval.pixel_thresh / np.cos(angle) for angle in angles]
@@ -74,11 +85,6 @@ class LaneEval(object):
             gt = gts[raw_file]
             gt_lanes = gt['lanes']
             y_samples = gt['h_samples']
-            if len(pred_lanes) == 0:
-                continue
-            print(pred_lanes)
-            print(gt_lanes)
-            print(y_samples)
             try:
                 a, p, n = LaneEval.bench(pred_lanes, gt_lanes, y_samples, run_time)
             except BaseException as e:
@@ -87,14 +93,14 @@ class LaneEval(object):
             fp += p
             fn += n
         num = len(gts)
-        # # the first return parameter is the default ranking parameter
-        # return json.dumps([
-        #     {'name': 'Accuracy', 'value': accuracy / num, 'order': 'desc'},
-        #     {'name': 'FP', 'value': fp / num, 'order': 'asc'},
-        #     {'name': 'FN', 'value': fn / num, 'order': 'asc'}
-        # ])
+        # the first return parameter is the default ranking parameter
+        return json.dumps([
+            {'name': 'Accuracy', 'value': accuracy / num, 'order': 'desc'},
+            {'name': 'FP', 'value': fp / num, 'order': 'asc'},
+            {'name': 'FN', 'value': fn / num, 'order': 'asc'}
+        ])
 
 
 if __name__ == '__main__':
     import sys
-    print(LaneEval.bench_one_submit("test_result.json", "test_label.json"))
+    print(LaneEval.bench_one_submit("test_result.json", "../dataset/val/val.json"))

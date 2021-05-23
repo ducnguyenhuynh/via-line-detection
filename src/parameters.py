@@ -1,4 +1,3 @@
-%%writefile parameters.py
 #############################################################################################################
 ##
 ##  Parameters
@@ -58,8 +57,8 @@ class Parameters():
     train_root_url="../dataset/train/"
     train_labels_root="../dataset/train/"
 
-    test_root_url="../dataset/train/"
-    test_labels_root="../dataset/train/"
+    test_root_url="../dataset/val/"
+    test_labels_root="../dataset/val/"
     
     # test parameter
     color = [(0,0,0), (255,0,0), (0,255,0),(0,0,255),(255,255,0),(255,0,255),(0,255,255),(255,255,255),(100,255,0),(100,0,255),(255,100,0),(0,100,255),(255,0,100),(0,255,100)]

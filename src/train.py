@@ -1,4 +1,3 @@
-%%writefile train.py
 #############################################################################################################
 ##
 ##  Source code for training. In this source code, there are initialize part, training part, ...

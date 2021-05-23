@@ -1,10 +1,3 @@
-#########################################################################
-##
-##  Data loader source code for TuSimple dataset
-##
-#########################################################################
-
-
 import math
 import numpy as np
 import cv2
@@ -43,16 +36,29 @@ class Generator(object):
 
         # load training set from curvelanes datasets.
         self.train_data = []
+    
+        with open(self.p.train_root_url + 'train.json') as f:
+            while True:
+                line = f.readline()
+                if not line:
+                    break
+                jsonString = json.loads(line)
+                self.train_data.append(jsonString)
 
-        with open("../dataset/train.txt") as f:
-            self.train_data = f.readlines()
 
         self.size_train = len(self.train_data)
+        print(self.size_train)
 
         # load test set
         self.test_data = []
-        with open("../dataset/val.txt") as f:
-            self.test_data = f.readlines()
+        with open(self.p.test_root_url+'val.json') as f:
+            #with open(self.p.test_root_url+'test_label.json') as f:
+            while True:
+                line = f.readline()
+                if not line:
+                    break
+                jsonString = json.loads(line)
+                self.test_data.append(jsonString)
 
         self.size_test = len(self.test_data)
 
@@ -91,54 +97,20 @@ class Generator(object):
     def Resize_data_test(self, start, end):
         inputs = []
         path = []
-        target_lanes = []
         target_h = []
-
+        gt = []
         for i in range(start, end):
             data = self.test_data[i]
-            # print(self.p.test_root_url+data[:-1])
-            temp_image = cv2.imread(self.p.test_root_url+data[:-1])
-            
-            original_size_x = temp_image.shape[1]
-            original_size_y = temp_image.shape[0]
-
+            temp_image = cv2.imread(self.p.test_root_url+data['raw_file'])
             ratio_w = self.p.x_size*1.0/temp_image.shape[1]
             ratio_h = self.p.y_size*1.0/temp_image.shape[0]
-            
             temp_image = cv2.resize(temp_image, (self.p.x_size,self.p.y_size))
             inputs.append( np.rollaxis(temp_image, axis=2, start=0) )
-            path.append(data[0:-1])
+            path.append(i)
+            gt.append(np.array(data['lanes']) )
+            target_h.append(np.array(data['h_samples']) )
 
-            temp_lanes = []
-            temp_h = []
-
-            annoatation = self.p.test_labels_root+data[:-4]+"lines.txt"
-            with open(annoatation) as f:
-                annoatation_data = f.readlines()
-
-            for j in annoatation_data:
-                x = []
-                y = []
-                temp_x = j.split()[0::2]
-                temp_y = j.split()[1::2]
-
-                temp_x = [float(temp_x[i]) for i in range(len(temp_x))]
-                temp_y = [float(temp_y[i]) for i in range(len(temp_y))]
-                
-
-                for k in range(len(temp_x)):
-                    x_value = int(temp_x[k])
-                    y_value = int(temp_y[k])
-                    if 0 < x_value < original_size_x and 0 < y_value < original_size_y:
-                        x.append( x_value )
-                        y.append( y_value )
-                
-                temp_lanes.append( x )
-                temp_h.append( y )
-            target_lanes.append(np.array(temp_lanes))
-            target_h.append(np.array(temp_h))
-
-        return np.array(inputs), path, ratio_w, ratio_h, target_h, target_lanes
+        return np.array(inputs), path, ratio_w, ratio_h, target_h, gt
 
     def Resize_data(self, start, end, sampling_list):
         inputs = []
@@ -182,72 +154,46 @@ class Generator(object):
                     data_list.append(data)
                 
              '''
-            # if sampling_list == None:
-            #     data = random.sample(self.train_data, 1)[0]
-            #     data_list.append(data)
-            # elif len(sampling_list) < 10:
-            #     data = random.sample(self.train_data, 1)[0]
-            #     data_list.append(data)
-            # else:            
-            #     choose = random.random()
-            #     if choose > 0.2:#0.25:
-            #         data = random.sample(self.train_data, 1)[0]
-            #         data_list.append(data)
-            #     else:
-            #         data = random.sample(sampling_list, 1)[0]
-            #         data_list.append(data)
+            if sampling_list == None:
+                data = random.sample(self.train_data, 1)[0]
+                data_list.append(data)
+            elif len(sampling_list) < 10:
+                data = random.sample(self.train_data, 1)[0]
+                data_list.append(data)
+            else:            
+                choose = random.random()
+                if choose > 0.2:#0.25:
+                    data = random.sample(self.train_data, 1)[0]
+                    data_list.append(data)
+                else:
+                    data = random.sample(sampling_list, 1)[0]
+                    data_list.append(data)
            
-            data = random.sample(self.train_data, 1)[0]
-            data_list.append(data)
+            #data = random.sample(self.train_data_five, 1)[0]
+            #data_list.append(data)
 
             # train set image
-            # print(self.p.train_root_url+data[:-1])
-            temp_image = cv2.imread(self.p.train_root_url+data[:-1])
-            # if i==start:
-                # print(data[:-1])
-            original_size_x = temp_image.shape[1]
-            original_size_y = temp_image.shape[0]
+            temp_image = cv2.imread(self.p.train_root_url+data['raw_file'])
             ratio_w = self.p.x_size*1.0/temp_image.shape[1]
             ratio_h = self.p.y_size*1.0/temp_image.shape[0]
-            
             temp_image = cv2.resize(temp_image, (self.p.x_size,self.p.y_size))
             inputs.append( np.rollaxis(temp_image, axis=2, start=0) )
 
             temp_lanes = []
             temp_h = []
-
-            annoatation = self.p.train_labels_root+data[:-4]+"lines.txt"
-            with open(annoatation) as f:
-                annoatation_data = f.readlines()         
-
-            for j in annoatation_data:
-                x = []
-                y = []
-                temp_x = j.split()[0::2]
-                temp_y = j.split()[1::2]
-
-                temp_x = [float(temp_x[i]) for i in range(len(temp_x))]
-                temp_y = [float(temp_y[i]) for i in range(len(temp_y))]
-
-
-                for k in range(len(temp_x)):
-                    x_value = int(float(temp_x[k]))
-                    y_value = int(float(temp_y[k]))
-                    if 0 < x_value < original_size_x and 0 < y_value < original_size_y:
-                        x.append( x_value )
-                        y.append( y_value )
-                # print(len(x))
-                l, h = self.make_dense_x(np.array(x), np.array(y))
-                temp_lanes.append( l*ratio_w )
+            
+            for j in data['lanes']:
+                l = np.array(j)
+                h = np.array(data['h_samples'])
+                l, h = self.make_dense_x(l, h)
                 temp_h.append( h*ratio_h )
+                temp_lanes.append( l*ratio_w )
             target_lanes.append(np.array(temp_lanes))
             target_h.append(np.array(temp_h))
 
         #test set image
         test_index = random.randrange(0, self.size_test-1)
-        # print(self.p.test_root_url+self.test_data[test_index][:-1])
-        test_image = cv2.imread(self.p.test_root_url+self.test_data[test_index][0:-1])
-
+        test_image = cv2.imread(self.p.test_root_url+self.test_data[test_index]['raw_file'])
         test_image = cv2.resize(test_image, (self.p.x_size,self.p.y_size))
         
         return np.array(inputs), target_lanes, target_h, np.rollaxis(test_image, axis=2, start=0), data_list
